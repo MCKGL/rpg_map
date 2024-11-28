@@ -94,7 +94,7 @@ public class Map {
         // check if the item overlaps with any existing item
         for (Item existingItem : this.items) {
             if (newItem.overlapsWith(existingItem)) {
-                return false; // Collision détectée
+                return false;
             }
         }
 
