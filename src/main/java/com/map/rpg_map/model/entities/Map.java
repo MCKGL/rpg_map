@@ -88,7 +88,7 @@ public class Map {
         // check if the item is within the map boundaries
         if (newItem.getPosition().getxPosition() < 0 || newItem.getPosition().getyPosition() < 0 ||
                 newItem.getRight() > this.getWidth() || newItem.getBottom() > this.getHeight()) {
-            return false; // En dehors des limites
+            return false;
         }
 
         // check if the item overlaps with any existing item
