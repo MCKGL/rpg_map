@@ -39,7 +39,7 @@ public class Map {
     }
 
     public Size getSize() {
-        float totalWidth = this.cellsOnX * this.cell.getxSize();
+        float totalWidth = this.cellsOnX * this.cell.getWidth();
         float totalHeight = this.cellsOnY * this.cell.getHeight();
         return new Size(totalWidth, totalHeight);
     }
@@ -60,20 +60,14 @@ public class Map {
         this.items = items;
     }
 
-//    public void addItem(Item item) {
-//        if (!this.isPlaceFree(item)) {
+    public void addItem(Item item) {
+        if (!this.isPlaceFree(item)) {
 //            throw new IllegalArgumentException("Item can't be placed here");
-//        } else {
-//            this.items.add(item);
-//        }
-//    }
-
-    public boolean addItem(Item newItem) {
-        if (isPlaceFree(newItem)) {
-            items.add(newItem);
-            return true;
+            System.out.println("Item can't be placed here");
+        } else {
+            this.items.add(item);
+            System.out.println("Item added");
         }
-        return false;
     }
 
     public void removeItem(Item item) {
@@ -101,4 +95,13 @@ public class Map {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Map{" +
+                "cell=" + cell +
+                ", cellsOnX=" + cellsOnX +
+                ", cellsOnY=" + cellsOnY +
+                ", items=" + items +
+                '}';
+    }
 }

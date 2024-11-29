@@ -9,12 +9,12 @@ public class Cell {
         this.height = height;
     }
 
-    public float getxSize() {
+    public float getWidth() {
         return width;
     }
 
-    public void setxSize(float xSize) {
-        this.width = xSize;
+    public void setWidth(float width) {
+        this.width = width;
     }
 
     public float getHeight() {
