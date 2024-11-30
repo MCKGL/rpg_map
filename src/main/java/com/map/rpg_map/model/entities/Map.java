@@ -60,14 +60,15 @@ public class Map {
         this.items = items;
     }
 
-    public void addItem(Item item) {
+    public boolean addItem(Item item) {
+        boolean isAdd;
         if (!this.isPlaceFree(item)) {
-//            throw new IllegalArgumentException("Item can't be placed here");
-            System.out.println("Item can't be placed here");
+            isAdd = false;
         } else {
             this.items.add(item);
-            System.out.println("Item added");
+            isAdd = true;
         }
+        return isAdd;
     }
 
     public void removeItem(Item item) {
@@ -79,20 +80,21 @@ public class Map {
     }
 
     private boolean isPlaceFree(Item newItem) {
+        boolean isFree = true;
         // check if the item is within the map boundaries
         if (newItem.getPosition().getxPosition() < 0 || newItem.getPosition().getyPosition() < 0 ||
                 newItem.getRight() > this.getWidth() || newItem.getBottom() > this.getHeight()) {
-            return false;
+            isFree = false;
         }
 
         // check if the item overlaps with any existing item
         for (Item existingItem : this.items) {
             if (newItem.overlapsWith(existingItem)) {
-                return false;
+                isFree = false;
             }
         }
 
-        return true;
+        return isFree;
     }
 
     @Override

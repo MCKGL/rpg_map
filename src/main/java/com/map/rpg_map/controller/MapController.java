@@ -74,33 +74,33 @@ public class MapController {
         // Clear the map pane
         paneMap.getChildren().clear();
 
-        if (map == null) {
-            // TODO error message and null gestion
-            return;
-        }
+        if (map != null) {
+            int cellsOnX = map.getCellsOnX();
+            int cellsOnY = map.getCellsOnY();
+            float cellWidth = map.getCell().getWidth();
+            float cellHeight = map.getCell().getHeight();
 
-        int cellsOnX = map.getCellsOnX();
-        int cellsOnY = map.getCellsOnY();
-        float cellWidth = map.getCell().getWidth();
-        float cellHeight = map.getCell().getHeight();
+            // Draw the cells on the map
+            for (int row = 0; row < cellsOnY; row++) {
+                for (int col = 0; col < cellsOnX; col++) {
+                    Rectangle cellRect = new Rectangle();
+                    cellRect.setX(col * cellWidth);  // Position X
+                    cellRect.setY(row * cellHeight); // Position Y
+                    cellRect.setWidth(cellWidth);    // width of the cell
+                    cellRect.setHeight(cellHeight);  // height of the cell
+                    cellRect.setFill(Color.TRANSPARENT); // Transparent background
+                    cellRect.setStroke(Color.BLACK);     // Black border
 
-        // Draw the cells on the map
-        for (int row = 0; row < cellsOnY; row++) {
-            for (int col = 0; col < cellsOnX; col++) {
-                Rectangle cellRect = new Rectangle();
-                cellRect.setX(col * cellWidth);  // Position X
-                cellRect.setY(row * cellHeight); // Position Y
-                cellRect.setWidth(cellWidth);    // width of the cell
-                cellRect.setHeight(cellHeight);  // height of the cell
-                cellRect.setFill(Color.TRANSPARENT); // Transparent background
-                cellRect.setStroke(Color.BLACK);     // Black border
-
-                // Add the cell to the map pane
-                paneMap.getChildren().add(cellRect);
+                    // Add the cell to the map pane
+                    paneMap.getChildren().add(cellRect);
+                }
             }
+
+            System.out.println("Map drawn");
+        } else {
+            System.out.println("Error : no map to draw");
         }
 
-        System.out.println("Map drawn");
     }
 
     public void editCell() {
