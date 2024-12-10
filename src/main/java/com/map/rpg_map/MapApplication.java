@@ -1,5 +1,9 @@
 package com.map.rpg_map;
 
+import com.map.rpg_map.model.entities.Cell;
+import com.map.rpg_map.model.entities.Item;
+import com.map.rpg_map.model.entities.Map;
+import com.map.rpg_map.model.entities.Position;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

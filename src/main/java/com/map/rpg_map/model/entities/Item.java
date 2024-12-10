@@ -1,34 +1,33 @@
 package com.map.rpg_map.model.entities;
 
 public class Item {
-    private float width;
-    private float height;
+    private int cellsOnX;
+    private int cellsOnY;
     private Position position;
     private String description;
-    private Color color;
+    private String url;
 
-    public Item(float width, float height, Position position, String description, Color color) {
-        this.width = width;
-        this.height = height;
+    public Item(int cellsOnX, int cellsOnY, Position position, String description, String url) {
+        this.cellsOnX = cellsOnX;
+        this.cellsOnY = cellsOnY;
         this.position = position;
         this.description = description;
-        this.color = color;
+        this.url = url;
     }
 
-    public float getWidth() {
-        return width;
+    public Item(int cellsOnX, int cellsOnY, String description, String url) {
+        this.cellsOnX = cellsOnX;
+        this.cellsOnY = cellsOnY;
+        this.description = description;
+        this.url = url;
     }
 
-    public void setWidth(float width) {
-        this.width = width;
+    public int getCellsOnY() {
+        return cellsOnY;
     }
 
-    public float getHeight() {
-        return height;
-    }
-
-    public void setHeight(float height) {
-        this.height = height;
+    public void setCellsOnY(int cellsOnY) {
+        this.cellsOnY = cellsOnY;
     }
 
     public Position getPosition() {
@@ -47,41 +46,46 @@ public class Item {
         this.description = description;
     }
 
-    public Color getColor() {
-        return color;
+    public String getUrl() {
+        return url;
     }
 
-    public void setColor(Color color) {
-        this.color = color;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public float getArea() {
-        return this.width * this.height;
+    public int getCellsOnX() {
+        return cellsOnX;
     }
 
-    public float getRight() {
-        return this.position.getxPosition() + this.width;
+    public void setCellsOnX(int cellsOnX) {
+        this.cellsOnX = cellsOnX;
     }
 
-    public float getBottom() {
-        return this.position.getyPosition() + this.height;
+
+    public float getRight(Cell cell) {
+        return this.position.getxPosition() + cellsOnX * cell.getWidth();
     }
 
-    public boolean overlapsWith(Item other) {
-        return !(this.getRight() <= other.getPosition().getxPosition() ||  // too far left
-                this.getPosition().getxPosition() >= other.getRight() ||  // too far right
-                this.getBottom() <= other.getPosition().getyPosition() || // too far up
-                this.getPosition().getyPosition() >= other.getBottom());  // too far down
+    public float getBottom(Cell cell) {
+        return this.position.getyPosition() + cellsOnY * cell.getHeight();
+    }
+
+    public boolean overlapsWith(Item other, Cell cell) {
+        return !(this.getRight(cell) <= other.getPosition().getxPosition() ||  // too far left
+                this.getPosition().getxPosition() >= other.getRight(cell) ||  // too far right
+                this.getBottom(cell) <= other.getPosition().getyPosition() || // too far up
+                this.getPosition().getyPosition() >= other.getBottom(cell));  // too far down
     }
 
     @Override
     public String toString() {
         return "Item{" +
-                "width=" + width +
-                ", height=" + height +
+                "cellsOnX=" + cellsOnX +
+                ", cellsOnY=" + cellsOnY +
                 ", position=" + position +
                 ", description='" + description + '\'' +
-                ", color=" + color +
+                ", url='" + url + '\'' +
                 '}';
     }
 }

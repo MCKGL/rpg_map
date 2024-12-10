@@ -60,11 +60,15 @@ public class Map {
         this.items = items;
     }
 
-    public boolean addItem(Item item) {
-        boolean isAdd;
-        if (!this.isPlaceFree(item)) {
-            isAdd = false;
-        } else {
+    public boolean addItem(Item item, Position clickPosition) {
+        boolean isAdd = false;
+
+        float alignedX = (float) Math.floor(clickPosition.getxPosition() / cell.getWidth()) * cell.getWidth();
+        float alignedY = (float) Math.floor(clickPosition.getyPosition() / cell.getHeight()) * cell.getHeight();
+
+        item.setPosition(new Position(alignedX, alignedY));
+
+        if (this.isPlaceFree(item)) {
             this.items.add(item);
             isAdd = true;
         }
@@ -83,13 +87,13 @@ public class Map {
         boolean isFree = true;
         // check if the item is within the map boundaries
         if (newItem.getPosition().getxPosition() < 0 || newItem.getPosition().getyPosition() < 0 ||
-                newItem.getRight() > this.getWidth() || newItem.getBottom() > this.getHeight()) {
+                newItem.getRight(cell) > this.getWidth() || newItem.getBottom(cell) > this.getHeight()) {
             isFree = false;
         }
 
         // check if the item overlaps with any existing item
         for (Item existingItem : this.items) {
-            if (newItem.overlapsWith(existingItem)) {
+            if (newItem.overlapsWith(existingItem, cell)) {
                 isFree = false;
             }
         }

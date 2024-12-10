@@ -1,56 +1,125 @@
 package com.map.rpg_map.controller;
 
-import com.map.rpg_map.model.entities.Cell;
-import com.map.rpg_map.model.entities.Map;
+import com.map.rpg_map.model.entities.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.event.ActionEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class MapController {
     @FXML
-    private Label labelCreate, labelEditCell, labelSizeType;
+    private Label labelEditCell;
     @FXML
-    private MenuItem menuNewMap, menuNewItem;
+    private MenuItem menuNewMap, menuNewItem, menuDelete, menuAbout;
     @FXML
-    private Pane paneCreation, paneCreateCell, paneMap;
+    private Pane paneCreation, paneMap;
+    @FXML
+    private ScrollPane paneInventory;
     @FXML
     private TextField textWCell, textHCell, textWMap, textHMap;
 
-    private boolean isMapCreation;
     private Cell cell = new Cell(25, 25);
     private Map map;
+    private Inventory inventory = new Inventory();
+    private VBox inventoryContent;
+    private ImageView currentlyHighlightedImageView = null;
 
     @FXML
     public void initialize() {
+        this.hidePane();
+        for (DefaultItems defaultItem : DefaultItems.values()) {
+            Item item = new Item(
+                    defaultItem.getCellsOnX(),
+                    defaultItem.getCellsOnY(),
+                    defaultItem.getDescription(),
+                    defaultItem.getUrl()
+            );
+            inventory.addItem(item);
+        }
+        setupInventory();
+    }
+
+    private void setupInventory() {
+        inventoryContent = new VBox();
+        inventoryContent.setSpacing(10);
+        paneInventory.setContent(inventoryContent);
+
+        for (Item item : inventory.getItems()) {
+            VBox itemBox = createItemBox(item);
+            inventoryContent.getChildren().add(itemBox);
+        }
+    }
+
+    private VBox createItemBox(Item item) {
+        VBox vbox = new VBox();
+        ImageView imageView = createImageView(item);
+        Label label = new Label(item.getDescription());
+        setupItemClickListener(imageView);
+        vbox.getChildren().addAll(imageView, label);
+        return vbox;
+    }
+
+    private void setupItemClickListener(ImageView imageView) {
+        imageView.setOnMouseClicked(event -> {
+            if (currentlyHighlightedImageView != null && currentlyHighlightedImageView != imageView) {
+                currentlyHighlightedImageView.setStyle("");
+            }
+            if (currentlyHighlightedImageView == imageView) {
+                imageView.setStyle("");
+                currentlyHighlightedImageView = null;
+            } else {
+                imageView.setStyle("-fx-effect: innershadow(gaussian, orangered, 10, 0.5, 0, 0);");
+                currentlyHighlightedImageView = imageView;
+            }
+        });
+    }
+
+    private ImageView createImageView(Item item) {
+        ImageView imageView;
+        try {
+            imageView = new ImageView(getClass().getResource("/images/"+item.getUrl()).toExternalForm());
+            imageView.setFitWidth(item.getCellsOnX() * cell.getWidth());
+            imageView.setFitHeight(item.getCellsOnY() * cell.getHeight());
+            imageView.setPreserveRatio(true);
+        } catch (Exception e) {
+            System.out.println("Erreur de chargement de l'image : " + item.getUrl());
+            imageView = new ImageView(); // Image vide par défaut
+        }
+
+        return imageView;
+    }
+
+    private void hidePane() {
         paneCreation.setVisible(false);
     }
 
-    public void showPaneCreation(ActionEvent event) {
-        textWCell.setText(String.valueOf(cell.getWidth()));
-        textHCell.setText(String.valueOf(cell.getHeight()));
-        labelEditCell.setVisible(false);
+    public void showPane(ActionEvent event) {
+        this.hidePane();
         if (event.getSource() == menuNewMap) {
-            this.isMapCreation = true;
-            paneCreateCell.setVisible(true);
-            labelCreate.setText("Create a new map");
-            labelSizeType.setText("Number of cells");
+            textWCell.setText(String.valueOf(cell.getWidth()));
+            textHCell.setText(String.valueOf(cell.getHeight()));
+            paneCreation.setVisible(true);
         }
         if (event.getSource() == menuNewItem) {
-            this.isMapCreation = false;
-            paneCreateCell.setVisible(false);
-            labelCreate.setText("Create a new item");
-            labelSizeType.setText("px");
+            // TODO : show item importation pane
         }
-        paneCreation.setVisible(true);
+        if (event.getSource() == menuDelete) {
+            // TODO : show delete map pane
+        }
+        if (event.getSource() == menuAbout) {
+            // TODO : show about pane
+        }
+
     }
 
-    public void createElement() {
-        if (this.isMapCreation) {
+    public void createMap() {
             try {
                 int mapWidth = Integer.parseInt(textWMap.getText());
                 int mapHeight = Integer.parseInt(textHMap.getText());
@@ -63,10 +132,7 @@ public class MapController {
             } catch (NumberFormatException e) {
                 System.out.println("Error : invalid map size");
             }
-        } else {
-            System.out.println("Create a new item");
-            // TODO
-        }
+
         paneCreation.setVisible(false);
     }
 
